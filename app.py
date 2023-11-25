@@ -64,22 +64,29 @@ def splitted(paragraph: str, limit: int = 300):
     return r
 
 
+def skip(paragraph: str):
+    return paragraph.startswith('-') or paragraph.startswith('http') or paragraph.startswith('www.')
+
+
 def main():
     with open(f"text.txt", "r") as file:
         n = 0
         lines = file.readlines()
         for line in lines:
-            text = line.strip()
-            if text:
+            paragraph = line.strip()
+            if paragraph:
                 n += 1
-                k = 0
-                splitted_text = splitted(text)
-                for st in splitted_text:
-                    k += 1
-                    print(f"\n{n}_{k}\t{st}")
-                    file = speech_file(n, k)
-                    if not os.path.exists(file):
-                        text2speech(file, st)
+                if skip(paragraph):
+                    print(f"\n{n}\t{paragraph}\nSKIPPED")
+                else:
+                    k = 0
+                    splitted_text = splitted(paragraph)
+                    for st in splitted_text:
+                        k += 1
+                        print(f"\n{n}_{k}\t{st}")
+                        file = speech_file(n, k)
+                        # if not os.path.exists(file):
+                        #    text2speech(file, st)
 
 
 if __name__ == "__main__":
